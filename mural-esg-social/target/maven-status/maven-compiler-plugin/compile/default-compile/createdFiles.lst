@@ -1,0 +1,8 @@
+br/com/fiap/mural/campaign/dto/CampaignRequest.class
+br/com/fiap/mural/campaign/Campaign.class
+br/com/fiap/mural/campaign/CampaignRepository.class
+br/com/fiap/mural/campaign/CampaignService.class
+br/com/fiap/mural/campaign/CampaignController.class
+br/com/fiap/mural/campaign/dto/CampaignResponse.class
+br/com/fiap/mural/config/GlobalExceptionHandler.class
+br/com/fiap/mural/MuralApplication.class
