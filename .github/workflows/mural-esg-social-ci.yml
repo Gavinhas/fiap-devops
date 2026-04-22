@@ -44,6 +44,11 @@ jobs:
     name: Docker build
     runs-on: ubuntu-latest
     needs: maven
+    # O default do workflow usa working-directory: mural-esg-social; aqui o docker build
+    # precisa dos paths relativos à raiz do repositório (Dockerfile + context).
+    defaults:
+      run:
+        working-directory: ${{ github.workspace }}
     steps:
       - uses: actions/checkout@v4
 
