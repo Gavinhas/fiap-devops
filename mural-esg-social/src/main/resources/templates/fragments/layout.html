@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="site-header">
+    <div class="container header-inner">
+        <a class="brand" th:href="@{/}">Mural ESG · Social</a>
+        <nav class="nav-actions">
+            <a th:if="${isAdmin}" class="btn btn-outline" th:href="@{/admin/campaigns/new}">Nova campanha</a>
+            <span th:if="${loggedIn}" class="user-chip">
+                <span th:text="${currentUsername}">user</span>
+                <span th:if="${isAdmin}" class="badge badge-admin">admin</span>
+                <span th:if="${isUserRole}" class="badge badge-user">usuário</span>
+            </span>
+            <a th:unless="${loggedIn}" class="btn btn-primary" th:href="@{/login}">Entrar</a>
+            <form th:if="${loggedIn}" class="logout-form" th:action="@{/logout}" method="post">
+                <button type="submit" class="btn btn-ghost">Sair</button>
+            </form>
+        </nav>
+    </div>
+</header>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">
+        <p>Mural de ações sociais — ESG, pilar Social.</p>
+    </div>
+</footer>
+</body>
+</html>

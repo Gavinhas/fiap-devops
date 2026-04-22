@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ class CampaignControllerIT {
     ObjectMapper objectMapper;
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void listAndCreateCampaign() throws Exception {
         mockMvc.perform(get("/api/campaigns"))
                 .andExpect(status().isOk())
@@ -47,7 +49,8 @@ class CampaignControllerIT {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.title").value("Campanha teste"))
                 .andExpect(jsonPath("$.goalAmount").value(1000.00))
-                .andExpect(jsonPath("$.currentAmount").value(250.50));
+                .andExpect(jsonPath("$.currentAmount").value(250.50))
+                .andExpect(jsonPath("$.campaignType").value("MONETARY_FICTITIOUS"));
 
         mockMvc.perform(get("/api/campaigns"))
                 .andExpect(status().isOk())
@@ -55,10 +58,12 @@ class CampaignControllerIT {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     void createWithoutCurrentAmountDefaultsToZero() throws Exception {
         var req = new br.com.fiap.mural.campaign.dto.CampaignRequest(
                 "Só meta",
                 "Sem valor",
+                CampaignType.MONETARY_FICTITIOUS,
                 new BigDecimal("500.00"),
                 null
         );

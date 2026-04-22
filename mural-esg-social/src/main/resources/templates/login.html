@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrar · Mural ESG</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="page">
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="container narrow main">
+    <section class="panel">
+        <h1>Entrar</h1>
+        <p class="muted">Use as contas de exemplo do ambiente local ou as definidas em <code>app.seed.*</code>.</p>
+
+        <div class="alert alert-error" th:if="${param.error}">
+            Credenciais inválidas ou sessão expirada.
+        </div>
+
+        <form class="stack-form" th:action="@{/login}" method="post">
+            <label>
+                Usuário
+                <input type="text" name="username" autocomplete="username" required autofocus>
+            </label>
+            <label>
+                Senha
+                <input type="password" name="password" autocomplete="current-password" required>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        </form>
+
+        <div class="hint-box">
+            <p><strong>Padrão (desenvolvimento):</strong></p>
+            <ul>
+                <li><strong>admin</strong> / admin — administrador (criar campanhas)</li>
+                <li><strong>usuario</strong> / usuario — usuário (comentar)</li>
+            </ul>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

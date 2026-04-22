@@ -2,6 +2,8 @@ package br.com.fiap.mural.campaign;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,10 @@ public class Campaign {
     @Column(name = "current_amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal currentAmount;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "campaign_type", nullable = false, length = 40)
+    private CampaignType campaignType = CampaignType.MONETARY_FICTITIOUS;
+
     @Column(name = "created_at", nullable = false)
     private Instant createdAt;
 
@@ -40,6 +46,13 @@ public class Campaign {
             createdAt = Instant.now();
         }
         if (currentAmount == null) {
+            currentAmount = BigDecimal.ZERO;
+        }
+        if (campaignType == null) {
+            campaignType = CampaignType.MONETARY_FICTITIOUS;
+        }
+        if (campaignType == CampaignType.COMMUNITY_SUPPORT) {
+            goalAmount = BigDecimal.ZERO;
             currentAmount = BigDecimal.ZERO;
         }
     }
@@ -86,5 +99,13 @@ public class Campaign {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public CampaignType getCampaignType() {
+        return campaignType;
+    }
+
+    public void setCampaignType(CampaignType campaignType) {
+        this.campaignType = campaignType;
     }
 }

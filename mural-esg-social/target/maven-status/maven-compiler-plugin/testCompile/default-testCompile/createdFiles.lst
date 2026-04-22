@@ -1,2 +1,4 @@
+br/com/fiap/mural/web/CampaignDetailPageIT.class
 br/com/fiap/mural/MuralApplicationTests.class
+br/com/fiap/mural/web/CampaignContributeIT.class
 br/com/fiap/mural/campaign/CampaignControllerIT.class

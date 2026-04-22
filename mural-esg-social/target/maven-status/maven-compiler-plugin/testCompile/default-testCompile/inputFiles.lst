@@ -1,2 +1,4 @@
 /Users/guilherme.gava.digisystem/dev/nu/Fiap/mural-esg-social/src/test/java/br/com/fiap/mural/MuralApplicationTests.java
 /Users/guilherme.gava.digisystem/dev/nu/Fiap/mural-esg-social/src/test/java/br/com/fiap/mural/campaign/CampaignControllerIT.java
+/Users/guilherme.gava.digisystem/dev/nu/Fiap/mural-esg-social/src/test/java/br/com/fiap/mural/web/CampaignContributeIT.java
+/Users/guilherme.gava.digisystem/dev/nu/Fiap/mural-esg-social/src/test/java/br/com/fiap/mural/web/CampaignDetailPageIT.java

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${campaign.title}">Campanha</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="page">
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="container main">
+    <a class="back-link" th:href="@{/}">← Voltar ao mural</a>
+
+    <div class="alert alert-success" th:if="${supportOk}" th:text="${supportOk}"></div>
+    <div class="alert alert-error" th:if="${supportError}" th:text="${supportError}"></div>
+
+    <article class="detail-hero card">
+        <div class="card-tags">
+            <span class="pill pill-purple" th:if="${campaign.isCommunitySupport()}">Apoio da comunidade</span>
+            <span class="pill pill-outline" th:if="${campaign.isMonetary()}">Meta em R$</span>
+        </div>
+        <h1 th:text="${campaign.title}">Título</h1>
+        <div class="prose preserve-lines" th:text="${campaign.description}">Descrição</div>
+
+        <div class="progress-block" th:if="${campaign.isMonetary()}">
+            <div class="progress-meta">
+                <span>Arrecadação: <strong>R$ <span th:text="${campaign.currentAmount}">0</span></strong></span>
+                <span class="muted">Meta: R$ <span th:text="${campaign.goalAmount}">0</span></span>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" th:style="|width: ${progressPct}%|"></div>
+            </div>
+
+            <div class="donate-panel" th:if="${loggedIn}">
+                <h3 class="donate-title">Ajude esta meta</h3>
+                <p class="muted small donate-disclaimer">
+                    Registro simbólico no mural — não há cobrança nem pagamento integrado.
+                </p>
+                <div class="donate-presets">
+                    <form th:action="@{/campaigns/{id}/contribute(id=${campaign.id})}" method="post">
+                        <input type="hidden" name="amount" value="10">
+                        <button type="submit" class="btn btn-outline btn-sm">+ R$ 10</button>
+                    </form>
+                    <form th:action="@{/campaigns/{id}/contribute(id=${campaign.id})}" method="post">
+                        <input type="hidden" name="amount" value="25">
+                        <button type="submit" class="btn btn-outline btn-sm">+ R$ 25</button>
+                    </form>
+                    <form th:action="@{/campaigns/{id}/contribute(id=${campaign.id})}" method="post">
+                        <input type="hidden" name="amount" value="50">
+                        <button type="submit" class="btn btn-outline btn-sm">+ R$ 50</button>
+                    </form>
+                    <form th:action="@{/campaigns/{id}/contribute(id=${campaign.id})}" method="post">
+                        <input type="hidden" name="amount" value="100">
+                        <button type="submit" class="btn btn-outline btn-sm">+ R$ 100</button>
+                    </form>
+                </div>
+                <form class="donate-custom stack-form"
+                      th:action="@{/campaigns/{id}/contribute(id=${campaign.id})}"
+                      method="post">
+                    <label class="donate-custom-label">
+                        Outro valor (R$)
+                        <input type="number" name="amount" step="0.01" min="0.01" placeholder="Ex.: 15,00" required>
+                    </label>
+                    <button type="submit" class="btn btn-primary btn-sm">Registrar apoio</button>
+                </form>
+            </div>
+
+            <div class="callout" th:unless="${loggedIn}">
+                <a th:href="@{/login}">Entre</a> para registrar um apoio simbólico à meta (sem pagamento real).
+            </div>
+        </div>
+
+        <div class="callout callout-soft" th:if="${campaign.isCommunitySupport()}">
+            <strong>Campanha de apoio da comunidade:</strong> o foco é divulgação, engajamento e comentários.
+        </div>
+    </article>
+
+    <section class="comments-section">
+        <h2>Comentários</h2>
+
+        <div th:unless="${loggedIn}" class="callout">
+            <a th:href="@{/login}">Faça login</a> para publicar um comentário. Visitantes podem ler as mensagens abaixo.
+        </div>
+
+        <form th:if="${loggedIn}" class="comment-form stack-form" th:action="@{/campaigns/{id}/comments(id=${campaign.id})}" method="post">
+            <label>
+                Seu comentário
+                <textarea name="body" rows="4" maxlength="2000" placeholder="Escreva uma mensagem de apoio ou sugestão..." required></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary">Publicar</button>
+        </form>
+
+        <ul class="comment-list" th:if="${not #lists.isEmpty(comments)}">
+            <li class="comment-item" th:each="cm : ${comments}">
+                <div class="comment-head">
+                    <strong th:text="${cm.authorName}">autor</strong>
+                    <span class="muted small" th:text="${cm.createdAtLabel}">data</span>
+                </div>
+                <p class="comment-body" th:text="${cm.body}">texto</p>
+            </li>
+        </ul>
+
+        <p class="muted" th:if="${#lists.isEmpty(comments)}">Ainda não há comentários — seja o primeiro.</p>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

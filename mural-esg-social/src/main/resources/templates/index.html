@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Mural · Campanhas sociais</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="page">
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="container main">
+    <section class="hero">
+        <h1>Campanhas do mural</h1>
+        <p class="lead">Participe com comentários e acompanhe as campanhas do mural.</p>
+    </section>
+
+    <section class="card-grid" th:if="${not #lists.isEmpty(campaigns)}">
+        <article th:each="c : ${campaigns}" class="card">
+            <a th:href="@{/campaigns/{id}(id=${c.id})}" class="card-main-link">
+                <div class="card-tags">
+                    <span class="pill pill-purple" th:if="${c.isCommunitySupport()}">Apoio da comunidade</span>
+                    <span class="pill pill-outline" th:if="${c.isMonetary()}">Meta em R$</span>
+                </div>
+                <h2 th:text="${c.title}">Título</h2>
+                <p class="card-desc" th:text="${#strings.abbreviate(c.description, 220)}">Descrição</p>
+                <div class="card-stats" th:if="${c.isMonetary()}">
+                    <span>R$ <strong th:text="${c.currentAmount}">0</strong></span>
+                    <span class="muted">meta R$ <strong th:text="${c.goalAmount}">0</strong></span>
+                </div>
+                <p class="muted small" th:if="${c.isCommunitySupport()}">
+                    Engajamento e comentários.
+                </p>
+            </a>
+            <div class="card-donate" th:if="${loggedIn and c.isMonetary()}">
+                <span class="muted small card-donate-label">Apoio simbólico:</span>
+                <div class="donate-presets donate-presets--compact">
+                    <form th:action="@{/campaigns/{id}/contribute(id=${c.id})}" method="post">
+                        <input type="hidden" name="amount" value="10">
+                        <button type="submit" class="btn btn-outline btn-sm">+10</button>
+                    </form>
+                    <form th:action="@{/campaigns/{id}/contribute(id=${c.id})}" method="post">
+                        <input type="hidden" name="amount" value="50">
+                        <button type="submit" class="btn btn-outline btn-sm">+50</button>
+                    </form>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <section class="empty-state" th:if="${#lists.isEmpty(campaigns)}">
+        <p>Nenhuma campanha ainda.</p>
+        <p th:if="${isAdmin}"><a class="btn btn-primary" th:href="@{/admin/campaigns/new}">Criar primeira campanha</a></p>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>

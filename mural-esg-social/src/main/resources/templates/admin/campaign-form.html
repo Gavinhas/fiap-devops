@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nova campanha · Admin</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body class="page">
+<div th:replace="~{fragments/layout :: header}"></div>
+
+<main class="container narrow main">
+    <a class="back-link" th:href="@{/}">← Voltar ao mural</a>
+
+    <section class="panel">
+        <h1>Nova campanha</h1>
+        <p class="muted">Somente administradores. Escolha o tipo conforme o objetivo da campanha.</p>
+
+        <div class="alert alert-error" th:if="${formError}" th:text="${formError}">Erro</div>
+
+        <form class="stack-form" th:action="@{/admin/campaigns}" th:object="${campaignForm}" method="post">
+            <fieldset class="radio-group">
+                <legend>Tipo de campanha</legend>
+                <label class="radio-card">
+                    <input type="radio" th:field="*{campaignType}" th:value="${T(br.com.fiap.mural.campaign.CampaignType).COMMUNITY_SUPPORT}" onchange="window.muralCampaignTypeSync()">
+                    <span><strong>Apoio da comunidade</strong><br><span class="muted small">Foco em engajamento e visibilidade, sem meta em reais.</span></span>
+                </label>
+                <label class="radio-card">
+                    <input type="radio" th:field="*{campaignType}" th:value="${T(br.com.fiap.mural.campaign.CampaignType).MONETARY_FICTITIOUS}" onchange="window.muralCampaignTypeSync()">
+                    <span><strong>Meta em R$</strong><br><span class="muted small">Meta e acompanhamento em reais (cadastro simbólico no sistema).</span></span>
+                </label>
+            </fieldset>
+
+            <label>
+                Título
+                <input type="text" th:field="*{title}" maxlength="200" required>
+            </label>
+            <p class="field-error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+
+            <label>
+                Descrição
+                <textarea th:field="*{description}" rows="8" maxlength="4000" required></textarea>
+            </label>
+            <p class="field-error" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></p>
+
+            <div id="monetary-fields">
+                <label>
+                    Meta (R$)
+                    <input type="number" th:field="*{goalAmount}" step="0.01" min="0.01" placeholder="Ex.: 1000,00">
+                </label>
+                <label>
+                    Valor já alcançado (R$), opcional
+                    <input type="number" th:field="*{currentAmount}" step="0.01" min="0" placeholder="0">
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Publicar campanha</button>
+        </form>
+    </section>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+
+<script>
+    window.muralCampaignTypeSync = function () {
+        const monetary = document.getElementById('monetary-fields');
+        const picked = document.querySelector('input[name="campaignType"]:checked');
+        if (!monetary || !picked) return;
+        const show = picked.value === 'MONETARY_FICTITIOUS';
+        monetary.style.display = show ? 'grid' : 'none';
+    };
+    document.addEventListener('DOMContentLoaded', window.muralCampaignTypeSync);
+</script>
+</body>
+</html>
